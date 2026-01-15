@@ -28,3 +28,7 @@ export interface ApiResponse<T> {
   data?: T;
   errors?: Array<{ msg: string; param: string }>;
 }
+
+export type LocalAuthUser = User & {
+  passwordHash: string;
+};

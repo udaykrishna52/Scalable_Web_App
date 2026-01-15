@@ -14,8 +14,12 @@ export default function TaskList({ tasks, onEdit, onDelete, onUpdate }: TaskList
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this task?')) {
       try {
-        await tasksAPI.delete(id);
-        onDelete();
+        const res = await tasksAPI.delete(id);
+        if (res.success) {
+          onDelete();
+        } else {
+          alert(res.message || 'Failed to delete task');
+        }
       } catch (error) {
         console.error('Error deleting task:', error);
         alert('Failed to delete task');
@@ -25,8 +29,12 @@ export default function TaskList({ tasks, onEdit, onDelete, onUpdate }: TaskList
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
-      await tasksAPI.update(id, { status: newStatus as any });
-      onUpdate();
+      const res = await tasksAPI.update(id, { status: newStatus as any });
+      if (res.success) {
+        onUpdate();
+      } else {
+        alert(res.message || 'Failed to update task status');
+      }
     } catch (error) {
       console.error('Error updating task status:', error);
       alert('Failed to update task status');

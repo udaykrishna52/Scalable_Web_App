@@ -1,6 +1,7 @@
 # Scalable Web App - Task Manager
 
-A modern, scalable web application with authentication and dashboard functionality, built with Next.js (frontend) and Node.js/Express (backend).
+A modern **frontend-only** web application with authentication and dashboard functionality, built with Next.js.  
+**Backend has been removed**; auth + tasks are stored in the browser via `localStorage`.
 
 ## Features
 
@@ -14,14 +15,9 @@ A modern, scalable web application with authentication and dashboard functionali
 - ✅ **CRUD Operations** - Full Create, Read, Update, Delete for tasks
 - ✅ **Search & Filter** - Advanced filtering and search functionality
 
-### Backend
-- ✅ **Node.js/Express** - RESTful API server
-- ✅ **MongoDB** - Database with Mongoose ODM
-- ✅ **JWT Authentication** - Secure token-based authentication
-- ✅ **Password Hashing** - bcrypt for secure password storage
-- ✅ **Input Validation** - express-validator for request validation
-- ✅ **Error Handling** - Comprehensive error handling middleware
-- ✅ **CORS** - Cross-origin resource sharing enabled
+### Data/Auth (Frontend-only)
+- ✅ **Local auth** - Register/login stored in `localStorage`
+- ✅ **Local CRUD** - Tasks stored in `localStorage`
 
 ## Tech Stack
 
@@ -31,35 +27,12 @@ A modern, scalable web application with authentication and dashboard functionali
 - TypeScript
 - TailwindCSS 4
 - React Hook Form
-- Axios
-- js-cookie
-
-### Backend
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- JWT (jsonwebtoken)
-- bcryptjs
-- express-validator
-- CORS
+- Browser `localStorage`
 
 ## Project Structure
 
 ```
 scalable-web-app/
-├── backend/
-│   ├── models/
-│   │   ├── User.js
-│   │   └── Task.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── profile.js
-│   │   └── tasks.js
-│   ├── middleware/
-│   │   └── auth.js
-│   ├── server.js
-│   ├── package.json
-│   └── .env.example
 ├── frontend/
 │   ├── app/
 │   │   ├── dashboard/
@@ -80,8 +53,6 @@ scalable-web-app/
 │   ├── types/
 │   │   └── index.ts
 │   └── package.json
-├── API_DOCUMENTATION.md
-├── postman_collection.json
 └── README.md
 ```
 
@@ -89,7 +60,6 @@ scalable-web-app/
 
 ### Prerequisites
 - Node.js (v18 or higher)
-- MongoDB (local installation or MongoDB Atlas)
 - npm or yarn
 
 ### Installation
@@ -102,94 +72,31 @@ scalable-web-app/
 
 2. **Install dependencies**
    ```bash
-   npm run install:all
-   ```
-   Or install separately:
-   ```bash
-   # Root dependencies
-   npm install
-   
-   # Backend dependencies
-   cd backend
-   npm install
-   
-   # Frontend dependencies
-   cd ../frontend
-   npm install
-   ```
-
-3. **Configure Backend**
-   ```bash
-   cd backend
-   cp .env.example .env
-   ```
-   Edit `.env` file:
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/scalable-web-app
-   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-   NODE_ENV=development
-   ```
-
-4. **Configure Frontend**
-   ```bash
    cd frontend
-   cp .env.local.example .env.local
-   ```
-   Edit `.env.local` file:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   npm install
    ```
 
-5. **Start MongoDB**
-   Make sure MongoDB is running on your system. If using MongoDB Atlas, update the `MONGODB_URI` in `.env`.
-
-6. **Run the application**
-
-   **Option 1: Run both frontend and backend together**
+3. **Run the application**
    ```bash
-   npm run dev
-   ```
-
-   **Option 2: Run separately**
-   ```bash
-   # Terminal 1 - Backend
-   cd backend
-   npm run dev
-
-   # Terminal 2 - Frontend
    cd frontend
    npm run dev
    ```
 
-7. **Access the application**
+4. **Access the application**
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000/api
-   - Health Check: http://localhost:5000/api/health
 
-## API Documentation
+## Data persistence
 
-See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentation.
+This app stores data in your browser:
+- Users: `localStorage` key `swa_users`
+- Current user: `localStorage` key `swa_current_user_id`
+- Token: `localStorage` key `swa_token`
+- Tasks: `localStorage` key `swa_tasks`
 
-## Postman Collection
+## Security note
 
-Import `postman_collection.json` into Postman to test all API endpoints. The collection includes:
-- Authentication endpoints (Register, Login)
-- Profile endpoints (Get, Update)
-- Tasks endpoints (CRUD operations)
-- Health check endpoint
-
-**Note:** After logging in or registering, the token will be automatically saved to the collection variable `token` for authenticated requests.
-
-## Security Features
-
-1. **Password Hashing**: Passwords are hashed using bcrypt with salt rounds of 12
-2. **JWT Authentication**: Secure token-based authentication with 7-day expiration
-3. **Input Validation**: Both client-side and server-side validation
-4. **CORS**: Configured for secure cross-origin requests
-5. **Error Handling**: Comprehensive error handling without exposing sensitive information
-6. **Protected Routes**: Frontend routes protected with authentication checks
-7. **Token Storage**: Secure cookie-based token storage
+Since this is **frontend-only**, it is **not secure for production** (client storage can be tampered with).  
+For real security you need a backend + proper password hashing/JWT on the server.
 
 ## Scalability Considerations
 
@@ -250,12 +157,6 @@ Import `postman_collection.json` into Postman to test all API endpoints. The col
 
 ## Development
 
-### Backend Development
-```bash
-cd backend
-npm run dev  # Uses nodemon for auto-reload
-```
-
 ### Frontend Development
 ```bash
 cd frontend
@@ -264,11 +165,6 @@ npm run dev  # Next.js development server
 
 ### Building for Production
 ```bash
-# Backend
-cd backend
-npm start
-
-# Frontend
 cd frontend
 npm run build
 npm start
@@ -284,20 +180,10 @@ npm start
 5. Test search and filter functionality
 6. Test protected routes (logout and try accessing dashboard)
 
-### API Testing
-Use the provided Postman collection or test with curl:
+### Reset local data
 
-```bash
-# Register
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Test User","email":"test@example.com","password":"password123"}'
-
-# Login
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"password123"}'
-```
+To reset the app, clear site data in the browser or delete these keys in DevTools → Application → Local Storage:
+`swa_users`, `swa_current_user_id`, `swa_token`, `swa_tasks`
 
 ## License
 
@@ -307,9 +193,6 @@ This project is created for educational purposes as part of a Frontend Developer
 
 Created as part of a Frontend Developer Intern assignment demonstrating:
 - Modern frontend development with React/Next.js
-- Backend API development with Node.js/Express
-- Database integration with MongoDB
-- Authentication and security best practices
 - Scalable architecture considerations
 
 # Scalable_Web_App

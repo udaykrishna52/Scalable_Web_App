@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { authAPI } from '@/lib/api';
-import { setAuthToken } from '@/lib/auth';
 
 interface RegisterForm {
   name: string;
@@ -34,11 +33,12 @@ export default function RegisterPage() {
       const { confirmPassword, ...registerData } = data;
       const response = await authAPI.register(registerData);
       if (response.success) {
-        setAuthToken(response.token);
         router.push('/dashboard');
+        return;
       }
+      setError(response.message || 'Registration failed. Please try again.');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      setError(err?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }

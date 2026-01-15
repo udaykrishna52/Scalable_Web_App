@@ -1,15 +1,18 @@
-import Cookies from 'js-cookie';
+const TOKEN_KEY = 'swa_token';
 
 export const setAuthToken = (token: string) => {
-  Cookies.set('token', token, { expires: 7 }); // 7 days
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(TOKEN_KEY, token);
 };
 
-export const getAuthToken = (): string | undefined => {
-  return Cookies.get('token');
+export const getAuthToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(TOKEN_KEY);
 };
 
 export const removeAuthToken = () => {
-  Cookies.remove('token');
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(TOKEN_KEY);
 };
 
 export const isAuthenticated = (): boolean => {

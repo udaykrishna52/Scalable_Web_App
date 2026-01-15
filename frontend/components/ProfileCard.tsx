@@ -42,9 +42,11 @@ export default function ProfileCard({ user, onUpdate }: ProfileCardProps) {
       if (response.success) {
         setIsEditing(false);
         onUpdate();
+        return;
       }
+      setError(response.message || 'Failed to update profile');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update profile');
+      setError(err?.message || 'Failed to update profile');
     } finally {
       setLoading(false);
     }

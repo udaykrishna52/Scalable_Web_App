@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { authAPI } from '@/lib/api';
-import { setAuthToken } from '@/lib/auth';
 
 interface LoginForm {
   email: string;
@@ -28,11 +27,12 @@ export default function LoginPage() {
     try {
       const response = await authAPI.login(data);
       if (response.success) {
-        setAuthToken(response.token);
         router.push('/dashboard');
+        return;
       }
+      setError(response.message || 'Login failed. Please try again.');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setError(err?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

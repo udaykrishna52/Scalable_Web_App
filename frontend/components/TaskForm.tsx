@@ -40,14 +40,17 @@ export default function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
     setError('');
     setLoading(true);
     try {
-      if (task) {
-        await tasksAPI.update(task._id, data);
-      } else {
-        await tasksAPI.create(data);
+      const res = task
+        ? await tasksAPI.update(task._id, data)
+        : await tasksAPI.create(data);
+
+      if (!res.success) {
+        setError(res.message || 'Failed to save task');
+        return;
       }
       onSuccess();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to save task');
+      setError(err?.message || 'Failed to save task');
     } finally {
       setLoading(false);
     }
