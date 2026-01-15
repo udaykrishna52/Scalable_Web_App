@@ -311,3 +311,5 @@ Created as part of a Frontend Developer Intern assignment demonstrating:
 - Database integration with MongoDB
 - Authentication and security best practices
 - Scalable architecture considerations
+
+# Scalable_Web_App
